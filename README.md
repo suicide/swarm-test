@@ -1,0 +1,1 @@
+test project for initializing docker swarm on multiple machines
