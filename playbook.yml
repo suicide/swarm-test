@@ -1,4 +1,4 @@
 - hosts: all
 #  tasks:
   roles:
-      - { role: atosatto.docker-swarm, become: yes }
+      - { role: angstwad.docker_ubuntu, become: yes }

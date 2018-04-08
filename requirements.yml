@@ -1,2 +1,2 @@
-- src: atosatto.docker-swarm
-  version: v1.3.2
+- src: angstwad.docker_ubuntu
+  version: v3.4.3

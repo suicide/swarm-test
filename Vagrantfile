@@ -72,7 +72,7 @@ Vagrant.configure("2") do |config|
   #   apt-get install -y apache2
   # SHELL
   #
-  N = 2
+  N = 3
   (1..N).each do |machine_id|
     config.vm.define "machine#{machine_id}" do |machine|
       machine.vm.hostname = "machine#{machine_id}"
