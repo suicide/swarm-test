@@ -1,4 +1,45 @@
-- hosts: all
+- hosts: no_docker
 #  tasks:
   roles:
       - { role: angstwad.docker_ubuntu, become: yes }
+
+
+- hosts: all
+  become: yes
+  vars:
+    join_tokens: |
+      {%- set o=[] %}
+      {%- for i in play_hosts %}
+        {%- if o.append(hostvars[i].join_token) %}
+        {%- endif %}
+      {%- endfor %}
+      {{ o }}
+  tasks:
+    - name: get docker info
+      shell: docker info
+      changed_when: False
+      register: docker_info
+
+    - name: find all monager join tokens
+      shell: docker swarm join-token -q manager
+      changed_when: False
+      register: docker_manager_token
+      when: "docker_info.stdout.find('Swarm: active') != -1"
+
+    - set_fact:
+        join_token: "{{ docker_manager_token }}"
+
+
+    - name: create cluster
+      shell: docker swarm init --advertise-addr {{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}
+      run_once: true
+      when: "join_tokens|length == 0"
+
+    - name: find manager join token
+      shell: docker swarm join-token -q manager
+      changed_when: False
+      register: docker_manager_token
+      delegate_to: 127.0.0.1
+      delegate_facts: True
+      when: "docker_info.stdout.find('Swarm: active') != -1
+        and docker_info.stdout.find('Is Manager: true') != -1"

@@ -1,0 +1,5 @@
+[fileservers]
+machine1 ansible_host=10.0.1.21 ansible_ssh_user=vagrant ansible_ssh_pass=vagrant
+
+[raspberrypies]
+raspberrypi ansible_host=10.0.1.11 ansible_ssh_user=pirate ansible_ssh_pass=hypriot
